@@ -1,0 +1,46 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+
+public class Emerald extends AbstractBlock{
+
+	private Color color = Color.green;
+	
+	
+	
+	public Emerald(int x, int y){
+		super(x,y);
+	}
+
+
+
+	@Override
+	public void draw(Graphics2D g) {
+		Rectangle temp = new Rectangle(this.x, this.y,40,40);
+		g.setColor(this.color);
+	
+		g.fill(temp);
+	}
+	
+	
+	public boolean getPicked(Hero hero){
+	
+		
+		if(Math.abs(hero.x-this.x)<=20 && Math.abs(hero.y-this.y)<=20){
+		
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean getPicked(Weapon weapon) {
+		
+		if(Math.abs(weapon.x-this.x)<=20 && Math.abs(weapon.y-this.y)<=20){
+			
+			return true;
+		}
+		return false;
+	}
+	
+	
+}

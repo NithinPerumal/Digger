@@ -1,0 +1,47 @@
+
+
+	import java.awt.Color;
+	import java.awt.Graphics2D;
+	import java.awt.geom.Rectangle2D;
+	 
+	 
+	/**
+	* TODO Put here a description of what this class does.
+	*
+	* @author weny.
+	*         Created Oct 31, 2014.
+	*/
+	public class Nobbin extends AbstractCharacter {
+	     private Color color1 = Color.pink;
+	     /**
+	     * TODO Put here a description of what this constructor does.
+	     *
+	     * @param x_pos
+	     * @param y_pos
+	     * @param blocks
+	     */
+	     public Nobbin(int x, int y) {
+	           this.x = x;
+	           this.y = y;
+	     }
+	 
+	 
+	     @Override
+	     public void draw(Graphics2D g) {
+	          
+	           Rectangle2D temp = new Rectangle2D.Double(this.x,this.y,40,40);
+	           g.setColor(this.color1);
+	           g.fill(temp);
+	     }
+	    
+	     public boolean checkDirect(int[][] blockList){
+	    	 for(int i=0;i<20;i++){
+	    		 for(int j=0;j<20;j++){
+	    			 if(blockList[i][j]==0){
+	    				 
+	    			 }
+	    		 }
+	    	 }
+	    	 return true;
+	     }
+	}

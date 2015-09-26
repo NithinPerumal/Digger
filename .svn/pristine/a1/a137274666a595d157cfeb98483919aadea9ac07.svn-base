@@ -1,0 +1,27 @@
+import java.awt.Color;
+import java.awt.Rectangle;
+
+
+public abstract class AbstractCharacter {
+	private int x;
+	private int y;
+	private Rectangle figure;
+	
+	private AbstractBlock[][] BlockList;
+	
+	
+	public AbstractCharacter(int x_pos, int y_pos, AbstractBlock[][] blocks) {
+		this.x = x_pos;
+		this.y = y_pos;
+		this.figure = new Rectangle(0,0,0,0);
+		this.BlockList = blocks;
+	}
+	
+	public abstract Color getColor();
+	
+	public abstract void updatePosition(int x_change, int y_change);
+	
+	public abstract boolean isDead();
+	
+	
+}

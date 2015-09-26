@@ -1,0 +1,321 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.swing.JFrame;
+
+/**
+ * TODO Put here a description of what this class does.
+ *
+ * @author weny. Created Oct 30, 2014.
+ */
+public class DigGame {
+
+	private static final long UPDATE_INTERVAL_MS = 30;
+	private long guard_time_interval = 20;
+	private int level = 1;
+	private Hero hero;
+	private Weapon weapon;
+	private int[][] blockList = new int[20][20];
+	private ArrayList<Nobbin> monsterList = new ArrayList<Nobbin>();
+	private ArrayList<Hobbin> monsterList1 = new ArrayList<Hobbin>();
+	private ArrayList<Emerald> emeraldList = new ArrayList<Emerald>();
+
+	private ArrayList<GoldBag> bags = new ArrayList<GoldBag>();
+	// private ArrayList<GoldBag> bagList = new ArrayList<>();
+	public JFrame frame;
+	// private AbstractBlock[][] blocks=new AbstractBlock[20][20];
+
+	private int Score = 0;
+
+	Runnable Hero = new Runnable() {
+		@Override
+		public void run() {
+			try {
+				while (true) {
+					Thread.sleep(UPDATE_INTERVAL_MS);
+					HeroTimePassed();
+					MonsterTimePassed();
+					Monster1TimePassed();
+					EmearaldTimepassed();
+					WeaponTimePassed();
+					bagTimePassed();
+					MapTimePassed();
+					kill();
+				}
+			} catch (InterruptedException | IOException exception) {
+				// Stop when interrupted
+			}
+		}
+	};
+
+	private Thread thread = new Thread(this.Hero);
+
+	public DigGame() throws IOException {
+		this.hero = new Hero(700, 360);
+		this.weapon = new Weapon(700, 700, 0, 0);
+		this.monsterList.add(new Nobbin(780, 0));
+		this.monsterList1.add(new Hobbin(665, 0));
+		this.thread.start();
+		Initialize();
+
+	}
+
+	@SuppressWarnings("deprecation")
+	public void Initialize() throws IOException {
+
+		this.thread.suspend();
+		for (int i = 0; i < 20; i++) {
+			for (int j = 0; j < 20; j++) {
+				this.blockList[i][j] = 0;
+			}
+
+		}
+		this.monsterList.clear();
+		this.monsterList1.clear();
+		this.emeraldList.clear();
+
+		this.bags.clear();
+		this.bags.add(new GoldBag(160, 40, this));
+		this.bags.add(new GoldBag(320, 40, this));
+		this.bags.add(new GoldBag(480, 40, this));
+		this.bags.add(new GoldBag(640, 40, this));
+
+		this.hero.setPosition(360, 700);
+		this.weapon.setPosition(900, 900);
+		this.monsterList.add(new Nobbin(720, 0));
+		this.monsterList1.add(new Hobbin(640, 0));
+		String levelString = "src\\Level" + this.level;
+		levelConstructor(levelString);
+		this.thread.resume();
+
+	}
+
+	public void HeroTimePassed() throws IOException {
+		if (this.hero != null) {
+			if(this.hero.isDead()){
+				this.hero.setPosition(360,700);
+				this.hero.isDead=false;
+			}
+			this.hero.checkEdge();
+			this.hero.updatePosition();
+			this.hero.freeze();
+			
+		}
+		
+	}
+
+	public void MonsterTimePassed() {
+		for (int i = 0; i < this.monsterList.size(); i++) {
+			if (this.monsterList.get(i).isDead()) {
+				this.monsterList.remove(i);
+				i--;
+			}
+		}
+		for (Nobbin h : this.monsterList) {
+
+			h.move(this.blockList);
+			h.updatePosition();
+		}
+	}
+
+	public void Monster1TimePassed() {
+		for (int i = 0; i < this.monsterList1.size(); i++) {
+			if (this.monsterList1.get(i).isDead()) {
+				this.monsterList1.remove(i);
+				i--;
+			}
+		}
+		for (Hobbin i : this.monsterList1) {
+			i.checkDirect(this.hero.getPosition());
+			i.updatePosition();
+		}
+		
+		
+	}
+
+	public void bagTimePassed() {
+		for (GoldBag b : this.bags) {
+			b.TimePassed();
+		}
+	}
+
+	public void WeaponTimePassed() {
+		this.weapon.checkEdge();
+		this.weapon.updatePosition();
+
+		for (Emerald e : this.emeraldList) {
+			if (e.getPicked(this.weapon)) {
+				this.weapon.isDead = true;
+				this.weapon.setPosition(1500, 1500);
+				this.weapon.setXVelocity(0);
+				this.weapon.setYVelocity(0);
+
+			}
+		}
+
+	}
+
+	public Hero getHero() {
+		return this.hero;
+	}
+
+	public Weapon getWeapon() {
+		return this.weapon;
+	}
+
+	public void kill() {
+		for (int k = 0; k < this.getMonster1().size(); k++) {
+			if (Math.abs(this.getWeapon().getX()
+					- this.getMonster1().get(k).getX()) < 50
+					&& Math.abs(this.getWeapon().getY()
+							- this.getMonster1().get(k).getY()) < 50) {
+				this.getMonster1().get(k).isDead = true;
+				this.getMonster1().remove(k);
+
+			}
+		}
+		for (int j = 0; j < this.getMonsters().size(); j++) {
+			if (Math.abs(this.getWeapon().getX()
+					- this.getMonsters().get(j).getX()) < 50
+					&& Math.abs(this.getWeapon().getY()
+							- this.getMonsters().get(j).getY()) < 50) {
+				this.getMonsters().get(j).isDead = true;
+				// this.getMonsters().set(j, null);
+				this.getMonsters().remove(j);
+				// this.getMonsters().get(j).setPosition(2100, 2000);
+				// this.getMonsters().get(j).updatePosition();
+			}
+		}
+		for (int h = 0; h < this.getMonster1().size(); h++) {
+			if (Math.abs(this.hero.getX() - this.getMonster1().get(h).getX()) < 40
+					&& Math.abs(this.hero.getY()
+							- this.getMonster1().get(h).getY()) < 40) {
+				this.hero.isDead = true;
+				// this.hero = null;
+				// this.hero.setPosition(800, 200);
+				// this.hero.updatePosition();
+			}
+		}
+		for (int i = 0; i < this.getMonsters().size(); i++) {
+			if (Math.abs(this.hero.getX() - this.getMonsters().get(i).getX()) < 50
+					&& Math.abs(this.hero.getY()
+							- this.getMonsters().get(i).getY()) < 50) {
+				this.hero.isDead = true;
+				// this.hero = null;
+				// this.hero.setPosition(360, 700);
+				// this.hero.updatePosition();
+			}
+		}
+	}
+
+	public void levelConstructor(String fileName) throws IOException {
+		BufferedReader reader = new BufferedReader(new FileReader(fileName));
+		for (int i = 0; i < 20; i++) {
+			String s = reader.readLine();
+			for (int j = 0; j < 20; j++) {
+				if (s.charAt(j) == '1') {
+					this.blockList[j][i] = 1;
+
+				}
+
+				if (s.charAt(j) == '3') {
+					this.blockList[j][i] = 1;
+					this.emeraldList.add(new Emerald(j * 40, i * 40));
+				}
+
+				if (s.charAt(j) == '2') {
+					this.blockList[j][i] = 1;
+
+				}
+
+				if (s.charAt(j) == '4') {
+					this.blockList[j][i] = 1;
+					// this.bagList.add(new GoldBag(j*40, i*40));
+				}
+			}
+		}
+		reader.close();
+	}
+
+	public int[][] getBlock() {
+		return this.blockList;
+	}
+
+	public ArrayList<Emerald> getEmerald() {
+		return this.emeraldList;
+	}
+
+	public ArrayList<Nobbin> getMonsters() {
+		return this.monsterList;
+	}
+
+	public ArrayList<Hobbin> getMonster1() {
+		return this.monsterList1;
+	}
+
+	// public ArrayList<GoldBag> getBags() {
+	// return this.bagList;
+	// }
+
+	public void EmearaldTimepassed() {
+		for (Emerald e : this.emeraldList) {
+			if (e.getPicked(this.hero)) {
+				e.setLocation(1000, 1000);
+				this.Score += 100;
+				System.out.println(this.Score);
+			}
+		}
+
+	}
+
+	public void setLevel(int i) {
+		int a = i;
+		if (a < 1) {
+			a = 1;
+		}
+		if (a > 3) {
+			a = 3;
+		}
+		this.level = a;
+	}
+
+	public int getLevel() {
+		return this.level;
+	}
+
+	public ArrayList<GoldBag> getBags() {
+		return this.bags;
+	}
+
+	public void MapTimePassed() {
+		int x = this.hero.getX();
+		int y = this.hero.getY();
+		int z=this.monsterList1.get(0).getX();
+		int h=this.monsterList1.get(0).getY();
+		if (x % 40 >= 20) {
+			x += 20;
+		}
+		if (y % 40 >= 20) {
+			y += 20;
+		}
+		
+		if(z%40>=20){
+			z+=20;
+					}
+		
+		if(h%40>=20){
+			h+=20;
+			
+		}
+		
+		this.blockList[x / 40][y / 40] = 0;
+		this.blockList[z/40][h/40]=0;
+
+	}
+	
+	public void respwan(){
+		
+	}
+}

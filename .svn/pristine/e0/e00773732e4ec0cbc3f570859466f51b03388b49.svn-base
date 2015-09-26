@@ -1,0 +1,28 @@
+import java.awt.Rectangle;
+
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+
+
+public class CurrentState {
+	
+	int CurrentScore;
+	private JFrame world;
+	private JComponent piece;
+//	private int x;
+//	private int y;
+	
+	public CurrentState() {
+//		this.x = x_pos;
+//		this.y = y_pos;
+		
+	}
+	
+	private int getCurrentScore() {
+		return CurrentScore;
+	}
+	
+	
+	
+	
+}

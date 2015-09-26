@@ -1,0 +1,89 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+public class Emerald extends AbstractBlock{
+
+	private Color color = Color.green;
+	private BufferedImage img;
+
+	
+	
+	public Emerald(int x, int y){
+		super(x,y);
+		try {
+			this.img = ImageIO.read(new File("src/fiveemerald.jpg"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		};
+	}
+
+
+
+	@Override
+	public void draw(Graphics2D g) {
+//		Rectangle temp = new Rectangle(this.x, this.y,40,40);
+//		g.setColor(this.color);
+//		this.img = null;
+//		try 
+//		{
+//			this.img = ImageIO.read(new File("C:/EclipseWorkspaces/csse220/Digger/src/fiveemerald.jpg")); // eventually C:\\ImageTest\\pic2.jpg
+//		    
+//		} 
+//		catch (IOException e) 
+//		{
+//		    e.printStackTrace();
+//		}
+		g.drawImage(this.img, this.x, this.y, 40, 40, null);
+//		g.fill(temp);
+	}
+	
+	public boolean getimg() {
+		if (this.img == null) return true;
+		else return false;
+	}
+	
+	public boolean getPicked(Hero hero){
+	
+		
+		if(Math.abs(hero.x-this.x)<=20 && Math.abs(hero.y-this.y)<=20){
+		
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean getPicked(Weapon weapon) {
+		
+		if(Math.abs(weapon.x-this.x)<=20 && Math.abs(weapon.y-this.y)<=20){
+			
+			return true;
+		}
+		return false;
+	}
+	
+public boolean getPicked(Hobbin hobbin){
+	
+		
+		if(Math.abs(hobbin.x-this.x)<=20 && Math.abs(hobbin.y-this.y)<=20){
+		
+			return true;
+		}
+		return false;
+	}
+
+
+
+@Override
+public String returnType() {
+	// TODO Auto-generated method stub
+	return "Emerald";
+}
+	
+	
+}

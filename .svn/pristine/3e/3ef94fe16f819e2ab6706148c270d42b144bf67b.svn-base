@@ -1,0 +1,59 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+
+
+public class Handler extends JComponent{
+	private AbstractBlock[][] blocklist;
+	private Hero hero;
+	private JPanel panel;
+	private static final int FRAME_RATE = 30; //30 per second
+	private static final long TIME_PER_REPAINT = 1000 / FRAME_RATE;
+	
+	
+	public Handler(AbstractBlock[][] keys) {
+		this.hero = new Hero(35 * 8 + 7, 35 * 16 + 15, this.blocklist);
+		this.blocklist = keys;
+		
+		
+		Runnable repainter = new Runnable() {
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						Thread.sleep(TIME_PER_REPAINT);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					repaint();
+				}
+			}
+		};
+
+		Thread t = new Thread(repainter);
+		t.start();
+		
+		
+	}
+	
+	@Override
+	protected void paintComponent(Graphics g) {
+		Graphics2D graphics = (Graphics2D) g;
+		graphics.setColor(Color.BLACK);
+		graphics.fill(new Rectangle(750, 750));
+		
+		for (int i = 0; i < this.blocklist.length; i++) {
+			for (int j = 0; j < this.blocklist[0].length; j++) {
+				graphics.setColor(blocklist[i][j].getColor());
+				graphics.fill(blocklist[i][j].getShape());
+				graphics.draw(blocklist[i][j].getShape());
+			}
+		}
+		
+		
+	}
+}

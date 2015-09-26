@@ -1,0 +1,105 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.Point2D;
+
+
+public class Dirt extends AbstractBlock{
+
+	private Color color = Color.RED;
+	
+	
+	
+	public Dirt(int x, int y){
+		super(x,y);
+	}
+
+
+
+	@Override
+	public void draw(Graphics2D g) {
+		Rectangle temp = new Rectangle(this.x, this.y,35,35);
+		g.setColor(this.color);
+	
+		g.fill(temp);
+	}
+	
+	
+	public boolean getPicked(Hero hero){
+	
+		
+		if(Math.abs(hero.x-this.x)<=20 && Math.abs(hero.y-this.y)<=20){
+		
+			return true;
+		}
+		return false;
+	}
+	
+	
+}
+
+//
+//
+//public class Dirt extends AbstractBlock{
+//	
+//	private Color DirtColor;
+//	private Rectangle Shape;
+//	
+//	public Dirt(int x_pos, int y_pos) {
+//		super(x_pos, y_pos);
+//		this.DirtColor = Color.LIGHT_GRAY;
+//		this.Shape = new Rectangle(x_pos*35, y_pos*35,35,35);
+//
+//		// done Auto-generated constructor stub
+//	}
+//
+//	@Override
+//	public Point2D getPosition() {
+//		// done Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public String getObjectType() {
+//		// done Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public Shape getShape() {
+//		// done Auto-generated method stub
+//		return this.Shape;
+//	}
+//
+//	@Override
+//	public Color getColor() {
+//		// done Auto-generated method stub
+//		return this.DirtColor;
+//	}
+//
+//	@Override
+//	public String getType() {
+//		// done Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public boolean Fallable() {
+//		// done Auto-generated method stub
+//		return false;
+//	}
+//
+//	@Override
+//	public boolean canBreak() {
+//		// done Auto-generated method stub
+//		return false;
+//	}
+//
+//	@Override
+//	public boolean Passable() {
+//		// done Auto-generated method stub
+//		return false;
+//	}
+//
+//}

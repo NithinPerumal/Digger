@@ -1,0 +1,154 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.swing.JFrame;
+
+
+/**
+ * TODO Put here a description of what this class does.
+ *
+ * @author weny.
+ *         Created Oct 30, 2014.
+ */
+public class DigGame {
+	
+	private static final long UPDATE_INTERVAL_MS = 20;
+	private long guard_time_interval = 20;
+	private int level = 1;
+	private Hero hero;
+	private ArrayList<Block> blockList = new ArrayList<>();
+	private ArrayList<Monsters> monsterList = new ArrayList<>();
+	private ArrayList<Emerald> emeraldList = new ArrayList<>();
+	private ArrayList<Dirt> dirtList = new ArrayList<>();
+	public JFrame frame;
+	
+	
+	
+	private int Score = 0;
+	
+	Runnable Hero = new Runnable() {
+		@Override
+		public void run() {
+			try {
+				while (true) {
+					Thread.sleep(UPDATE_INTERVAL_MS);
+					HeroTimePassed();
+					EmearaldTimepassed();
+					
+
+				}
+			} catch (InterruptedException exception) {
+				// Stop when interrupted
+			}
+		}
+	};
+	
+	private Thread thread = new Thread(this.Hero);
+	
+	
+	
+	public DigGame() throws IOException{
+		this.hero = new Hero(0,0);
+		this.thread.start();
+		Initialize();
+		
+		
+		
+		
+	}
+	
+	@SuppressWarnings("deprecation")
+	public void Initialize() throws IOException {
+		
+		this.thread.suspend();
+		this.blockList.clear();
+		this.monsterList.clear();
+		this.emeraldList.clear();
+		this.dirtList.clear();
+		this.hero.setPosition(0, 0);
+		String levelString = "src\\Level"+this.level;
+		levelConstructor(levelString);
+		this.thread.resume();
+		
+		
+		
+	}
+
+	public void HeroTimePassed(){
+		this.hero.checkEdge();
+		this.hero.updatePosition();
+		
+	
+	}
+	
+	public Hero getHero(){
+		return this.hero;
+	}
+	
+	public void levelConstructor(String fileName) throws IOException{
+		BufferedReader reader = new BufferedReader(new FileReader(fileName));	
+		for(int i = 0; i<20;i++){
+			String s = reader.readLine();
+			for(int j=0;j<20;j++){
+				if(s.charAt(j)=='1'){
+					this.blockList.add(new Block(j,i));
+				}
+				
+				if(s.charAt(j)=='3'){
+					this.blockList.add(new Block(j,i));
+					this.emeraldList.add(new Emerald(j*35,i*35));
+				}
+				
+				if (s.charAt(j) == '2') {
+					this.blockList.add(new Block(j,i));
+					this.dirtList.add(new Dirt(j*35, i*35));
+				}
+			}
+		}
+		reader.close();
+	}
+	
+	public ArrayList<Block> getBlock(){
+		return this.blockList;
+	}
+	
+	public ArrayList<Emerald> getEmerald(){
+		return this.emeraldList;
+	}
+	
+	public ArrayList<Dirt> getDirt() {
+		return this.dirtList;
+	}
+	
+	public void EmearaldTimepassed(){
+		for(Emerald e:this.emeraldList){
+			if(e.getPicked(this.hero)){
+				e.setLocation(1000, 1000);
+				this.Score+=100;
+				System.out.println(Score);
+			}
+		}
+		for(Dirt d: this.dirtList) {
+			if (d.getPicked(this.hero)) {
+				d.setLocation(1000, 1000);
+			}
+		}
+	}
+
+	public void setLevel(int i) {
+		int a =i;
+		if(a<1){
+			a=1;
+		}
+		if(a>3){
+			a=3;
+		}
+		this.level = a;
+	}
+	
+	public int getLevel(){
+		return this.level;
+	}
+}

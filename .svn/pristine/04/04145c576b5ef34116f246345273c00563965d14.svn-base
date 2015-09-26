@@ -1,0 +1,68 @@
+
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+	 
+	public class Hobbin extends AbstractCharacter{
+	     private Color color1=Color.black;
+		private BufferedImage img;
+	    
+	     public Hobbin(int x,int y){
+	    	 super();
+	           this.x=x;
+	           this.y=y;
+	           try {
+	   			this.img = ImageIO.read(new File("src/hobbin.png"));
+	   		} catch (IOException e) {
+	   			// TODO Auto-generated catch block
+	   			e.printStackTrace();
+	   		};
+	     }
+	    
+	     @Override
+	     public void draw(Graphics2D g) {
+	           // TODO Auto-generated method stub.
+	          
+//	           Rectangle2D temp = new Rectangle2D.Double(this.x,this.y,40,40);
+//	           g.setColor(this.color1);
+//	           g.fill(temp);
+	    	 g.drawImage(this.img, this.x, this.y, 40, 40, null);
+	     }
+	     
+	     public boolean getimg() {
+	 		if (this.img == null) return true;
+	 		else return false;
+	 	}
+	    
+	     public void checkDirect(Point2D HeroPosition){
+
+	    	 if(this.x!=HeroPosition.getX() && this.y%40==0){
+	    		 this.x_Veloctiy = (this.x > HeroPosition.getX()) ? -1:1;
+	    		 this.y_Velocity=0;
+	    	 }
+	    	 else{
+	    		 if(this.x % 40==0){
+	    		 this.y_Velocity = (this.y > HeroPosition.getY()) ? -1:1;
+	    		 this.x_Veloctiy =0;}
+	    	 }
+	    	 
+	    	 
+	     }
+	     public void updatePosition(){
+	           this.x+=this.x_Veloctiy;
+	           this.y+=this.y_Velocity;
+	          
+	     }
+	     public void setPosition(int x,int y){
+	           this.x=x;
+	           this.y=y;
+	     }
+	}
+

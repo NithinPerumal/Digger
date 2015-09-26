@@ -1,0 +1,32 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+
+
+/**
+ * TODO Put here a description of what this class does.
+ *
+ * @author weny.
+ *         Created Nov 4, 2014.
+ */
+public class Monster1 extends AbstractCharacter{
+	private Color color1=Color.black;
+	
+	
+	public Monster1(int x,int y){
+		this.x=x;
+		this.y=y;
+		
+	}
+	
+	
+	@Override
+	public void draw(Graphics2D g) {
+		// TODO Auto-generated method stub.
+		
+		Rectangle2D temp = new Rectangle2D.Double(this.x,this.y,40,40);
+		g.setColor(this.color1);
+		g.fill(temp);
+	}
+
+}

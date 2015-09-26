@@ -1,0 +1,35 @@
+import java.awt.Color;
+
+
+public class Hero extends AbstractCharacter{
+	private Color heroColor;
+	public int x;
+	public int y;
+	public boolean dead;
+	int BLOCKSIZE = 35;
+	int HEROSIZE = 20;
+	
+	public Hero(int x_pos, int y_pos, AbstractBlock[][] blocks) {
+		super(x_pos, y_pos, blocks);
+		this.heroColor = Color.BLUE;
+		this.dead = false;
+
+	}
+
+	@Override
+	public Color getColor() {
+		// TODO Auto-generated method stub
+		return this.heroColor;
+	}
+	@Override
+	public void updatePosition(int x_change, int y_change) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public boolean isDead() {
+		// TODO Auto-generated method stub
+		return dead;
+	}
+	
+}

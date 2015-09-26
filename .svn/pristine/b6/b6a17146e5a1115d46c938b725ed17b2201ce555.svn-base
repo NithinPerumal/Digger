@@ -1,0 +1,42 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.Point2D;
+
+
+public class Dirt extends AbstractBlock{
+
+	private Color color = Color.RED;
+	
+	
+	
+	public Dirt(int x, int y){
+		super(x,y);
+	}
+
+
+
+	@Override
+	public void draw(Graphics2D g) {
+		Rectangle temp = new Rectangle(this.x, this.y,40,40);
+		g.setColor(this.color);
+	
+		g.fill(temp);
+	}
+	
+	
+	public boolean getPicked(Hero hero){
+	
+		
+		if(Math.abs(hero.x-this.x)<=20 && Math.abs(hero.y-this.y)<=20){
+		
+			return true;
+		}
+		return false;
+	}
+	
+	
+}
+
+

@@ -1,0 +1,40 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+
+
+public class Hero extends AbstractCharacter{
+	private Color color1= Color.blue;
+	final int height = 525;
+	final int width = 700;
+
+	
+	public Hero(int x, int y) {
+		this.x = x;
+		this.y = y;
+
+	}
+
+	@Override
+	public void draw(Graphics2D g) {
+		Rectangle2D temp = new Rectangle2D.Double(this.x , this.y, 35,35);
+		g.setColor(this.color1);
+		g.fill(temp);
+	}
+
+	public void checkEdge(){
+		if(this.x_Veloctiy<0 && this.x<=0){
+			this.x_Veloctiy=0;
+		}
+		if(this.x_Veloctiy>0 && this.x > this.width-35){
+			this.x_Veloctiy=0;
+		}
+		if(this.y_Velocity<0 && this.y <= 0){
+			this.y_Velocity=0;
+		}
+		if(this.y_Velocity>0 && this.y>this.height-35){
+			this.y_Velocity=0;
+		}
+	}
+
+}

@@ -1,0 +1,82 @@
+import java.awt.Color;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+public class BackGround {
+	public int height;
+	public int width;
+	public DigGame game;
+	public JPanel menu;
+	final JFrame backdrop = new JFrame();
+	final int TOTALXBLOCKS = 22;
+	final int TOTALYBLOCKS = 22;
+
+	public BackGround(int height, int width, DigGame game) {
+		this.game = game;
+		this.height = height;
+		this.width = width;
+		this.backdrop.setSize(height, width);
+		this.backdrop.setBackground(Color.BLACK);
+
+		
+
+//		ActionListener startListener = new ActionListener(){
+//			public void actionPerformed(ActionEvent e) {
+//				JButton pickedButton = (JButton) e.getSource();
+//				if (pickedButton.getText() == "Start Playing") {
+//					backdrop.remove(pickedButton.getParent());
+//					backdrop.repaint();
+//					try {
+//						Scanner new_game = new Scanner(new File("C:\\EclipseWorkspaces\\csse220\\Digger\\src\\Level1"));
+//						AbstractBlock[][] levelOne = new AbstractBlock[22][22];
+//						for (int i = 0; i < TOTALXBLOCKS; i++) {
+//							if(!new_game.hasNext())
+//								break;
+//							for (int j = 0; j < TOTALYBLOCKS; j++) {
+//								if(!new_game.hasNext())
+//									break;
+//								int blockvalue = new_game.nextInt();
+//								if (blockvalue == 1) {
+//									levelOne[i][j] = new Air(i, j);
+//								}
+//								if (blockvalue == 2) {
+//									levelOne[i][j] = new Dirt(i, j);
+//								}
+//								if (blockvalue == 3) {
+//									levelOne[i][j] = new Emerald(i, j);
+//								}
+//								if (blockvalue == 4) {
+//									levelOne[i][j] = new Unbreakable(i, j);
+//								}
+//							}
+//						}
+//						Handler filler = new Handler(levelOne);
+//						backdrop.add(filler);
+//					} catch (FileNotFoundException e1) {
+//					e1.printStackTrace();
+//				} catch (IOException e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
+//					
+//				backdrop.validate();
+//				
+//				}
+//				
+//			}	
+//		};
+
+//		JPanel menu = new JPanel();
+//		menu.setBackground(Color.BLACK);
+//		backdrop.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		JButton start = new JButton();
+//		start.addActionListener(startListener);
+//		start.setText("Start Playing");
+//		menu.add(start);
+//		backdrop.add(menu);
+		
+		
+		this.backdrop.add(new DComponent(game));
+	}
+}

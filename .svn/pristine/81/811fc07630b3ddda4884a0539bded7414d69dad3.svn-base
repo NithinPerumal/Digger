@@ -1,0 +1,66 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+
+public class Dirt extends AbstractBlock{
+
+	private Color color = Color.RED;
+	
+	
+	
+	public Dirt(int x, int y){
+		super(x,y);
+	}
+
+
+
+	@Override
+	public void draw(Graphics2D g) {
+		Rectangle temp = new Rectangle(this.x, this.y,40,40);
+		g.setColor(this.color);
+		BufferedImage img = null;
+		try 
+		{
+		    img = ImageIO.read(new File("C:/EclipseWorkspaces/csse220/Digger/src/five.jpeg")); // eventually C:\\ImageTest\\pic2.jpg
+		} 
+		catch (IOException e) 
+		{
+		    e.printStackTrace();
+		}
+		
+		g.drawImage(img, this.x, this.y, 35, 35, null);
+		//g.fill(temp);
+	}
+	
+	
+	public boolean getPicked(Hero hero){
+	
+		
+		if(Math.abs(hero.x-this.x)<=20 && Math.abs(hero.y-this.y)<=20){
+		
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean getPicked(Weapon weapon) {
+		if(Math.abs(weapon.x-this.x)<=20 && Math.abs(weapon.y-this.y)<=20){
+			
+			return true;
+		}
+		return false;	
+	}
+	
+	
+}
+
+

@@ -1,0 +1,261 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
+import java.io.IOException;
+
+import javax.swing.JComponent;
+
+/**
+ * TODO Put here a description of what this class does .
+ * 
+ * @author weny. Created Oct 31, 2014.
+ */
+public class DComponent extends JComponent {
+	public Hero hero;
+	public Weapon bullet;
+
+	class Repainter implements Runnable {
+		@Override
+		public void run() {
+			// Periodically asks Java to repaint this component
+			try {
+				while (true) {
+					Thread.sleep(REPAINT_INTERVAL_MS);
+
+					repaint();
+
+				}
+			} catch (InterruptedException exception) {
+				// Stop when interrupted
+			}
+		}
+	};
+
+	private static final int FRAMES_PER_SECOND = 30;
+	private static final long REPAINT_INTERVAL_MS = 60 / FRAMES_PER_SECOND;
+
+	DigGame game;
+	private Repainter repainter = new Repainter();
+	private Thread run = new Thread(this.repainter);
+	private int prevx = 0;
+	private int prevy = 0;
+
+	public DComponent(DigGame game) {
+		this.game = game;
+		this.hero = this.game.getHero();
+		this.bullet = this.game.getWeapon();
+		setFocusable(true);
+
+		DigListner keyboard = new DigListner();
+		this.addKeyListener(keyboard);
+
+		this.run.start();
+
+	}
+
+	private void setprevx(int x) {
+		this.prevx = x;
+	}
+
+	private void setprevy(int y) {
+		this.prevy = y;
+	}
+
+	private int getprevx() {
+		return this.prevx;
+	}
+
+	private int getprevy() {
+		return this.prevy;
+	}
+
+	@Override
+	protected void paintComponent(Graphics g2) {
+		super.paintComponent(g2);
+		Graphics2D g = (Graphics2D) g2;
+
+		for (int i = 0; i < 20; i++) {
+			for (int j = 0; j < 20; j++) {
+				if (this.game.getBlock()[j][i] == 1) {
+					Rectangle temp = new Rectangle(j * 40, i * 40, 40, 40);
+					g.setColor(Color.yellow);
+					g.fill(temp);
+				}
+			}
+		}
+
+		for (Emerald e : this.game.getEmerald()) {
+			e.draw(g);
+		}
+
+		for (Dirt d : this.game.getDirt()) {
+			d.draw(g);
+		}
+		//
+		for (Nobbin m : this.game.getMonsters()) {
+			if (!m.isDead) m.draw(g);
+			
+
+		}
+		for (Hobbin m1 : this.game.getMonster1()) {
+			if (!m1.isDead) m1.draw(g);
+		}
+
+		if (this.game.getHero().isDead == false) 
+			this.game.getHero().draw(g);
+		
+		this.game.getWeapon().draw(g);
+	}
+
+	// }
+
+	public double getPrevious() {
+		if (this.game.getHero().y_Velocity != 0) {
+			return this.game.getHero().y_Velocity;
+		} else if (this.game.getHero().x_Veloctiy != 0) {
+			return this.game.getHero().x_Veloctiy;
+		}
+		return 0;
+	}
+
+	public void shoot() {
+		// Point2D spawn = this.game.getHero().getPosition();
+		this.game.getWeapon().setPosition(this.game.getHero().getX(),
+				this.game.getHero().getY());
+
+	}
+
+	public class DigListner implements KeyListener {
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+
+			if (e.getKeyCode() == 38) {
+				if (!DComponent.this.hero.correctY()) {
+					DComponent.this.hero.setPrevious();
+				} else {
+					DComponent.this.hero.y_Velocity = -4;
+
+					DComponent.this.setprevy(-6);
+
+					DComponent.this.hero.previous = new Point(0, -4);
+				}
+			} else if (e.getKeyCode() == 40) {
+				if (!DComponent.this.hero.correctY()) {
+					DComponent.this.hero.setPrevious();
+				} else {
+					DComponent.this.hero.y_Velocity = 4;
+
+					DComponent.this.setprevy(6);
+
+					DComponent.this.hero.previous = new Point(0, 4);
+				}
+			} else if (e.getKeyCode() == 37) {
+				if (!DComponent.this.hero.correctX()) {
+					DComponent.this.hero.setPrevious();
+				} else {
+					DComponent.this.hero.x_Veloctiy = -4;
+
+					DComponent.this.setprevx(-6);
+
+					DComponent.this.hero.previous = new Point(-4, 0);
+				}
+			} else if (e.getKeyCode() == 39) {
+				if (!DComponent.this.hero.correctX()) {
+					DComponent.this.hero.setPrevious();
+				} else {
+					DComponent.this.hero.x_Veloctiy = 4;
+
+					DComponent.this.setprevx(6);
+
+					DComponent.this.hero.previous = new Point(4, 0);
+				}
+			} else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				shoot();
+				// System.out.println("X: " +
+				// DComponent.this.bullet.x_Veloctiy);
+				// System.out.println("Y: " +
+				// DComponent.this.bullet.y_Velocity);
+				DComponent.this.bullet.x = DComponent.this.hero.getX();
+				DComponent.this.bullet.y = DComponent.this.hero.getY();
+				DComponent.this.bullet.x_Veloctiy = DComponent.this.getprevx();
+				DComponent.this.bullet.y_Velocity = DComponent.this.getprevy();
+
+
+			} else if (e.getKeyCode() == 85) {
+				DComponent.this.hero.isDead = false;
+				for (Nobbin m : DComponent.this.game.getMonsters()) {
+					System.out.println("null setter");
+					m.isDead = true;
+					m = null;
+				}
+				for (Hobbin h : DComponent.this.game.getMonster1()) {
+					System.out.println("null setter");
+					h.isDead = true;
+					h = null;
+				}
+				DComponent.this.game
+						.setLevel(DComponent.this.game.getLevel() + 1);
+				try {
+					DComponent.this.game.Initialize();
+				} catch (IOException exception) {
+
+					exception.printStackTrace();
+				}
+			}
+
+			else if (e.getKeyCode() == 68) {
+				DComponent.this.hero.isDead = false;
+				for (Nobbin m : DComponent.this.game.getMonsters()) {
+					m.isDead = true;
+					m = null;
+				}
+				for (Hobbin h : DComponent.this.game.getMonster1()) {
+					h.isDead = true;
+					h = null;
+				}
+				DComponent.this.game
+						.setLevel(DComponent.this.game.getLevel() - 1);
+				try {
+					DComponent.this.game.Initialize();
+				} catch (IOException exception) {
+
+					exception.printStackTrace();
+				}
+			}
+
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// if (e.getKeyCode() == 38) {
+			// DComponent.this.hero.y_Velocity = 0;
+			// }
+			// if (e.getKeyCode() == 40) {
+			// DComponent.this.hero.y_Velocity = 0;
+			// }
+			// if (e.getKeyCode() == 37) {
+			// DComponent.this.hero.x_Veloctiy = 0;
+			// }
+			// if (e.getKeyCode() == 39) {
+			// DComponent.this.hero.x_Veloctiy = 0;
+			// }
+
+		}
+
+		@Override
+		public void keyTyped(KeyEvent arg0) {
+			// TODO Auto-generated method stub.
+
+		}
+
+	}
+
+}

@@ -1,0 +1,38 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+
+public class BackGround {
+	public int height;
+	public int width;
+	final JFrame backdrop = new JFrame();
+	
+	
+	public BackGround(int height, int width) {
+		this.height = height;
+		this.width = width;
+		backdrop.setSize(height, width);
+		
+		JPanel menu = new JPanel();
+		JButton start = new JButton();
+		start.setText("Start Playing");
+		menu.add(start);
+		
+		class ButtonListener implements ActionListener {
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				JButton pickedButton = (JButton) event.getSource();
+				if (pickedButton.getText() == "Start Playing") {
+					
+				}
+				
+			}
+			
+		}
+	}
+}

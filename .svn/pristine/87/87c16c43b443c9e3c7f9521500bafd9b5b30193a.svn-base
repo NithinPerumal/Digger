@@ -1,0 +1,33 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+
+
+public class GoldBag extends AbstractCharacter{
+	private Color color1 = Color.DARK_GRAY;
+	
+	
+	public GoldBag(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+	
+	@Override
+	public void draw(Graphics2D g) {
+		// TODO Auto-generated method stub
+		Rectangle2D temp = new Rectangle2D.Double(this.x , this.y, 40,40);
+		g.setColor(this.color1);
+		g.fill(temp);
+	}
+	
+	public int getX() {
+		return this.x;
+	}
+	
+	public int getY() {
+		return this.y;
+	}
+	
+	
+
+}

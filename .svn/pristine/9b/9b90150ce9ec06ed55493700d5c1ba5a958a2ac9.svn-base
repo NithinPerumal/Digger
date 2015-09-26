@@ -1,0 +1,67 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.Point2D.Double;
+
+public class GoldBag extends AbstractCharacter {
+	private Color color1 = Color.WHITE;
+	final int height = 800;
+	final int width = 800;
+
+	public GoldBag(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	@Override
+	public void draw(Graphics2D g) {
+		// TODO Auto-generated method stub
+		Rectangle2D temp = new Rectangle2D.Double(this.x, this.y, 40, 40);
+		g.setColor(this.color1);
+		g.fill(temp);
+	}
+
+	public boolean checkUnder(AbstractBlock[][] blockList) {
+		Point2D current = this.getPosition();
+//		System.out.println(blockList[(int) (current.getY()/40 + 1)][(int) current.getX()/40].returnType());
+		if ((current.getY() + 45 != this.height) || (current.getX() + 45 != this.width)) {
+			if (!blockList[(int) (current.getY()/40 + 1)][(int) current.getX()/40].returnType().equalsIgnoreCase(
+					"Dirt")
+					&& !blockList[(int) (current.getY()/40 + 1)][(int) current.getX()/40].returnType()
+							.equalsIgnoreCase("Emerald")) {
+				this.y_Velocity = 4;
+				return true;
+			}
+			else {
+				this.y_Velocity = 0;
+			}
+		}
+		return false;
+	}
+	
+	public void checkEdge(){
+		
+		if(this.x_Veloctiy<0 && this.x<=40){
+			this.x_Veloctiy=0;
+		}
+		if(this.x_Veloctiy>0 && this.x > this.width-40){
+			this.x_Veloctiy=0;
+		}
+		if(this.y_Velocity<0 && this.y <= 50){
+			this.y_Velocity=0;
+		}
+		if(this.y_Velocity>0 && this.y>this.height-40){
+			this.y_Velocity=0;
+		}
+	}
+
+	public int getX() {
+		return this.x;
+	}
+
+	public int getY() {
+		return this.y;
+	}
+
+}

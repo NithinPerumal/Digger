@@ -1,0 +1,31 @@
+import java.awt.geom.Point2D;
+
+/**
+ * Represents the temporary states of objects
+ * @author localmgr
+ *
+ */
+public interface Temporal {
+	
+	/**
+	 * Tells the object that it's life is over 
+	 */
+	public void kill();
+	
+	/**
+	 * Gets the position of an object
+	 * @return
+	 */
+	public Point2D getPosition();
+	
+	/**
+	 * Returns a string stating the type of object[Usually a block]
+	 */
+	public String getObjectType();
+	
+	/**
+	 * Lets us know if a block is breakable
+	 * @return
+	 */
+	public boolean canBreak();
+}

@@ -1,0 +1,108 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+
+public class GoldBag extends AbstractCharacter {
+	private Color color1 = Color.yellow;
+	final int height = 800;
+	final int width = 800;
+	private boolean isFalling = false;
+	private DigGame game;
+
+	public GoldBag(int x, int y, DigGame digGame) {
+		this.x = x;
+		this.y = y;
+		this.game = digGame;
+
+	}
+
+	@Override
+	public void draw(Graphics2D g) {
+		// TODO Auto-generated method stub
+		Rectangle2D temp = new Rectangle2D.Double(this.x, this.y, 40, 40);
+		g.setColor(this.color1);
+		g.fill(temp);
+	}
+
+	public void TimePassed() {
+		this.checkUnder();
+		this.push();
+		this.checkKill();
+		this.updatePosition();
+	}
+
+	private void checkKill() {
+		if (this.isFalling) {
+			for (Hobbin i : this.game.getMonster1()) {
+
+				if (Math.abs(this.x - i.x) < 40 && Math.abs(this.y - i.y) < 40) {
+					i.isDead = true;
+				}
+			}
+			for (Nobbin n : this.game.getMonsters()) {
+
+				if (Math.abs(this.x - n.x) < 40 && Math.abs(this.y - n.y) < 40) {
+					n.isDead = true;
+				}
+			}
+
+			if (Math.abs(this.x - this.game.getHero().x) < 40
+					&& Math.abs(this.y - this.game.getHero().y) < 40) {
+				this.game.getHero().isDead = true;
+			}
+		}
+
+	}
+//
+	public void push() {
+		for (int i = 0; i < this.game.getBags().size(); i++) {
+			if (Math.abs(this.game.getBags().get(i).x - this.game.getHero().x) < 25 && this.game.getBags().get(i).y == this.game.getHero().y) {
+//				System.out.println(this.game.getBags().get(i).x- this.game.getHero().x);
+				this.x_Veloctiy = -4;
+				System.out.println("Velocity set negative (left)");
+			} else if (this.game.getHero().x - this.game.getBags().get(i).x < 25 && this.game.getBags().get(i).y == this.game.getHero().y) {
+				this.x_Veloctiy = 4;
+				System.out.println("Velocity set positive (right)");
+			}
+			else {
+				this.x_Veloctiy = 0;
+			}
+		}
+	}
+
+	public void checkUnder() {
+
+		if (this.game.getBlock()[this.x / 40][this.y / 40 + 1] == 0) {
+			this.y_Velocity = 2;
+			this.isFalling = true;
+		} else {
+			this.y_Velocity = 0;
+			this.isFalling = false;
+		}
+	}
+
+	public void checkEdge() {
+
+		if (this.x_Veloctiy < 0 && this.x <= 40) {
+			this.x_Veloctiy = 0;
+		}
+		if (this.x_Veloctiy > 0 && this.x > this.width - 40) {
+			this.x_Veloctiy = 0;
+		}
+		if (this.y_Velocity < 0 && this.y <= 50) {
+			this.y_Velocity = 0;
+		}
+		if (this.y_Velocity > 0 && this.y > this.height - 40) {
+			this.y_Velocity = 0;
+		}
+	}
+
+	public int getX() {
+		return this.x;
+	}
+
+	public int getY() {
+		return this.y;
+	}
+
+}

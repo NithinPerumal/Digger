@@ -1,0 +1,128 @@
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Scanner;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+public class BackGroundFrame {
+	public int width;
+	public int height;
+	public JPanel main_menu;
+
+	public BackGroundFrame(int width, int height) {
+		this.width = width;
+		this.height = height;
+		final JFrame background = new JFrame();
+		background.setSize(this.width, this.height);
+
+		JPanel main_menu = new JPanel();
+		main_menu.setLayout(new BoxLayout(main_menu, BoxLayout.Y_AXIS));
+		main_menu.add(Box.createRigidArea(new Dimension(0, 320)));
+
+		JLabel title = new JLabel("Digger");
+		title.setFont(new Font("Calibri", Font.BOLD, 50));
+		title.setForeground(Color.BLUE);
+		title.setAlignmentX(Component.CENTER_ALIGNMENT);
+		main_menu.add(title);
+		main_menu.add(Box.createRigidArea(new Dimension(0, 20)));
+
+		JButton new_game = new JButton("New Game");
+		new_game.setAlignmentX(Component.CENTER_ALIGNMENT);
+		main_menu.add(new_game);
+		main_menu.add(Box.createRigidArea(new Dimension(0, 20)));
+
+		JButton exit = new JButton("Exit");
+		exit.setAlignmentX(Component.CENTER_ALIGNMENT);
+		main_menu.add(exit);
+		main_menu.add(Box.createRigidArea(new Dimension(0, 20)));
+
+		JButton help = new JButton("Help");
+		help.setAlignmentX(Component.CENTER_ALIGNMENT);
+		main_menu.add(help);
+		
+		class MyButtonListener implements ActionListener {
+
+			public void actionPerformed(ActionEvent e) {
+				
+				JButton button_selected = (JButton) e.getSource();
+
+				if (((JButton) e.getSource()).getText() == "Exit")
+					System.exit(0);
+
+				if (((JButton) e.getSource()).getText() == "New Game") {
+					String name = JOptionPane
+							.showInputDialog("What is your name?");
+					if(!(name == null)){
+						if(name.isEmpty()){
+							name = "Anonymous";
+						}
+					JPanel other = (JPanel) button_selected.getParent();
+					background.remove(other);
+					background.repaint();
+					DigGame game;
+					try {
+						game = new DigGame();
+						BackGround backdrop = new BackGround(800, 800, game);
+						game.frame = backdrop.backdrop;
+						backdrop.backdrop.setVisible(true);
+						background.setVisible(false);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+
+					background.validate();
+
+				}
+				}
+				if (((JButton) e.getSource()).getText() == "Help") {
+					help_function();
+				}
+			}
+
+		}
+
+		ActionListener main_listener = new MyButtonListener();
+		new_game.addActionListener(main_listener);
+		exit.addActionListener(main_listener);
+		help.addActionListener(main_listener);
+
+		main_menu.setBackground(Color.BLACK);
+		main_menu.setOpaque(true);
+
+		background.add(BorderLayout.CENTER, main_menu);
+		background.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		background.setVisible(true);
+
+	}
+
+	public void help_function() {
+		String s = "How to play Digger:\n"
+				+ " Use the arrow keys to navigate with your character.\n"
+				+ " The weapon can be shot by hitting space.\n"
+				+ " Collect emeralds and gold to gather points.\n";
+
+		String html1 = "<html><body style='width:";
+		String html2 = "px'>";
+
+		JOptionPane.showMessageDialog(null, new JLabel(html1 + "200" + html2
+				+ s));
+	}
+
+}

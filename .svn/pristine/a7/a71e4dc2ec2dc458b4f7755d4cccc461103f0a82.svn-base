@@ -1,0 +1,165 @@
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.IOException;
+
+import javax.swing.JComponent;
+
+/**
+ * TODO Put here a description of what this class does.
+ * 
+ * @author weny. Created Oct 31, 2014.
+ */
+public class DComponent extends JComponent {
+	
+	class Repainter implements Runnable {
+		@Override
+		public void run() {
+			// Periodically asks Java to repaint this component
+			try {
+				while (true) {
+					Thread.sleep(REPAINT_INTERVAL_MS);
+	
+					repaint();
+
+				}
+			} catch (InterruptedException exception) {
+				// Stop when interrupted
+			}
+		}
+	};
+
+	private static final int FRAMES_PER_SECOND = 30;
+	private static final long REPAINT_INTERVAL_MS = 60 / FRAMES_PER_SECOND;
+
+	DigGame game;
+	private Repainter repainter = new Repainter();
+	private Thread run = new Thread(this.repainter);
+//	private Weapon bullet = new Weapon(flags, flags);
+
+
+	public DComponent(DigGame game) {
+		this.game = game;
+
+		setFocusable(true);
+		this.game = game;
+
+		this.addKeyListener(new DigListner());
+
+		this.run.start();
+//		this.bullet = bullet;
+
+	}
+
+	@Override
+	protected void paintComponent(Graphics g2) {
+
+		super.paintComponent(g2);
+		Graphics2D g = (Graphics2D) g2;
+		
+		for(Block b:this.game.getBlock()){
+			
+			b.draw(g);
+		}
+		
+		for(Emerald e: this.game.getEmerald()){
+			e.draw(g);
+		}
+		
+		for (Dirt d: this.game.getDirt()) {
+			d.draw(g);
+		}
+		
+		this.game.getHero().draw(g);
+
+	}
+	
+	public double getPrevious() {
+		if (this.game.getHero().y_Velocity != 0) {
+			return this.game.getHero().y_Velocity;
+		}
+		else if (this.game.getHero().x_Veloctiy != 0) {
+			return this.game.getHero().x_Veloctiy;
+		}
+		return 0;
+	}
+	
+	public void shoot() {
+		
+	}
+	
+	public class DigListner implements KeyListener {
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+		
+			if (e.getKeyCode() == 38) {
+				
+				DComponent.this.game.getHero().y_Velocity = -3;
+			}
+			else if (e.getKeyCode() == 40) {
+				
+				DComponent.this.game.getHero().y_Velocity = 3;
+			}
+			else if (e.getKeyCode() == 37) {
+				DComponent.this.game.getHero().x_Veloctiy = -3;
+			}
+			else if (e.getKeyCode() == 39) {
+				DComponent.this.game.getHero().x_Veloctiy = 4;
+			}
+			else if (e.getKeyCode() == 32) {
+				
+//				DComponent.this.game.getWeapon()
+			}
+			else if (e.getKeyCode() == 85) {
+				DComponent.this.game.setLevel(DComponent.this.game.getLevel()+1);
+				try {
+					DComponent.this.game.Initialize();
+				} catch (IOException exception) {
+					
+					exception.printStackTrace();
+				}
+			}
+			
+			else if (e.getKeyCode() == 68) {
+				DComponent.this.game.setLevel(DComponent.this.game.getLevel()-1);
+				try {
+					DComponent.this.game.Initialize();
+				} catch (IOException exception) {
+					
+					exception.printStackTrace();
+				}
+			}
+			
+			
+			
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			if (e.getKeyCode() == 38) {
+				DComponent.this.game.getHero().y_Velocity = 0;
+			}
+			if (e.getKeyCode() == 40) {
+				DComponent.this.game.getHero().y_Velocity = 0;
+			}
+			if (e.getKeyCode() == 37) {
+				DComponent.this.game.getHero().x_Veloctiy = 0;
+			}
+			if (e.getKeyCode() == 39) {
+				DComponent.this.game.getHero().x_Veloctiy = 0;
+			}
+
+		}
+
+		@Override
+		public void keyTyped(KeyEvent arg0) {
+			// TODO Auto-generated method stub.
+
+		}
+
+	}
+
+}

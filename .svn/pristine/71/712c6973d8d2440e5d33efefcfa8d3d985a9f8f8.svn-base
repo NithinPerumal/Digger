@@ -1,0 +1,48 @@
+import java.awt.Color;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.Point2D;
+
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+
+
+public abstract class AbstractBlock extends JComponent implements Temporal, Drawable{
+	
+	private JFrame frame;
+	private Rectangle shape;
+	private JComponent piece;
+	private int x;
+	private int y;
+	private boolean breakable;
+	private boolean pass_through;
+	
+	public AbstractBlock(int x_position, int y_position) {
+		this.shape = new Rectangle(x_position*35, y_position*35,35,35);
+		this.x = x_position;
+		this.y = y_position;
+	}
+	
+	public Point2D getCurrentPosition() {
+		return new Point2D.Double(this.x, this.y);
+	}
+	
+	@Override
+	public abstract Shape getShape();
+	
+	@Override
+	public void kill() {
+		this.frame.remove(this.piece);
+	}
+	
+	public abstract Color getColor();
+	
+	public abstract String getType();
+	
+	public abstract boolean Fallable();
+	
+	public abstract boolean canBreak();
+	
+	public abstract boolean Passable();
+	
+}

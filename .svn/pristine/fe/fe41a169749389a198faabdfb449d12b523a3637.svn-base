@@ -1,0 +1,23 @@
+import java.io.IOException;
+
+public class Main {
+
+	/**
+	 * @param args
+	 * @throws IOException 
+	 */
+	public static void main(String[] args) throws IOException {
+		// Your code here  (but beware of conflicts) weny
+		// feel free to create whatever you like
+		
+//		DigGame game= new  DigGame();
+//		BackGround backdrop = new BackGround(800, 800, game);
+//		game.frame = backdrop.backdrop;
+//		backdrop.backdrop.setVisible(true);
+		
+		BackGroundFrame BackGround = new BackGroundFrame(800, 800);
+		
+		
+	}
+
+}

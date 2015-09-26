@@ -1,0 +1,167 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.Timer;
+
+import javax.imageio.ImageIO;
+
+public class GoldBag extends AbstractCharacter {
+	private Color color1 = Color.yellow;
+	final int height = 800;
+	final int width = 800;
+	private boolean isFalling = false;
+	private boolean isdead = false;
+	private int time =0;
+	private int fallDistance = 0;
+	private DigGame game;
+	private BufferedImage img;
+
+	public GoldBag(int x, int y, DigGame digGame) {
+
+		super();
+		this.x = x;
+		this.y = y;
+		this.game = digGame;
+
+		try {
+			this.img = ImageIO.read(new File("src/GoldBag.jpg"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		};
+
+	}
+
+
+	@Override
+	public void draw(Graphics2D g) {
+		// Done Auto-generated method stub
+
+		g.drawImage(this.img, this.x, this.y, 40, 40, null);
+	}
+
+	public boolean getimg() {
+		if (this.img == null) return true;
+		else return false;
+	}
+	
+	public void TimePassed() throws InterruptedException {
+		
+		this.checkEdge();
+		this.checkUnder();
+		this.push();
+		this.checkKill();
+		this.updatePosition();
+	}
+
+	@Override
+	public void updatePosition(){
+		super.updatePosition();
+		this.fallDistance += this.y_Velocity;
+		
+	}
+	
+	private void checkKill() {
+		if (this.isFalling) {
+			for (Hobbin i : this.game.getMonster1()) {
+
+				if (Math.abs(this.x - i.x) < 40 && Math.abs(this.y - i.y) < 40) {
+					i.isDead = true;
+				}
+			}
+			for (Nobbin n : this.game.getMonsters()) {
+
+				if (Math.abs(this.x - n.x) < 40 && Math.abs(this.y - n.y) < 40) {
+					n.isDead = true;
+				}
+			}
+
+			if (Math.abs(this.x - this.game.getHero().x) < 20
+					&& Math.abs(this.y - this.game.getHero().y) < 20) {
+				this.game.getHero().isDead = true;
+			}
+		}
+
+	}
+
+	
+	//
+	/**
+	 * TODO Put here a description of what this method does.
+	 * 
+	 */
+	public void push() {
+		if (this.y == this.game.getHero().y
+				&& Math.abs(this.x - this.game.getHero().x) < 40) {
+			this.x_Veloctiy = (int) this.game.getHero().previous.getX();
+			this.time = 41;
+		} else {
+			this.x_Veloctiy = 0;
+			if(Math.abs(this.x - this.game.getHero().x)>70|| this.y != this.game.getHero().y){
+				this.fix();
+			}
+		}
+
+	}
+
+	public void checkUnder() throws InterruptedException {
+		if (this.game.getBlock()[this.x / 40][this.y / 40 + 1] == 0) {
+			if(this.time<40 && !this.isFalling){
+				this.time++;
+			}
+			else{
+				if(this.x%40 ==0){
+				this.time=0;
+				this.y_Velocity = 2;
+				this.isFalling = true;}}
+
+		} else {
+			this.y_Velocity = 0;
+			this.isFalling = false;
+			if(this.fallDistance >=80){
+				this.isDead = true;
+			}
+			this.fallDistance =0;
+
+		}
+
+	}
+	public void fix(){
+		if(this.x %40 !=0){
+			if(this.x % 40 >=20){
+				this.x ++; 
+			}
+			else{
+				this.x --;
+			}
+		}
+		
+	}
+	public void checkEdge() {
+
+		if (this.x_Veloctiy < 0 && this.x <= 40) {
+			this.x_Veloctiy = 0;
+		}
+		if (this.x_Veloctiy > 0 && this.x > this.width - 40) {
+			this.x_Veloctiy = 0;
+		}
+		if (this.y_Velocity < 0 && this.y <= 50) {
+			this.y_Velocity = 0;
+		}
+		if (this.y_Velocity > 0 && this.y > this.height - 40) {
+			this.y_Velocity = 0;
+		}
+	}
+
+	public int getX() {
+		return this.x;
+	}
+
+	public int getY() {
+		return this.y;
+	}
+
+}

@@ -1,0 +1,15 @@
+import java.awt.geom.Point2D;
+
+/**
+ * Represents the temporary states of objects
+ * @author localmgr
+ *
+ */
+
+public interface Temporal {
+	
+	
+	void TimePassed();
+	
+	void Die();
+}
